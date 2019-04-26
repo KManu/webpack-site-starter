@@ -7,8 +7,7 @@ const packageJson = require('./package.json');
 
 async function kickstart() {
 
-    const questions = await inquirer.prompt([
-        {
+    const questions = await inquirer.prompt([{
             type: 'input',
             name: 'projectName',
             message: `What's the name of your project? (kebab-cased)`,
@@ -28,7 +27,11 @@ async function kickstart() {
         }
     ]);
 
-    const {projectName, projectAuthor, mobileHeaderColor} = questions;
+    const {
+        projectName,
+        projectAuthor,
+        mobileHeaderColor
+    } = questions;
 
     ui.log.write('Removing /docs directory');
     rimraf.sync('./docs');

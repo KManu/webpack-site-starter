@@ -1,7 +1,7 @@
 const path = require('path');
-
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin'); //installed via npm
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const WebappWebpackPlugin = require('webapp-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin'); // installed via npm
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
@@ -13,14 +13,13 @@ module.exports = {
     entry: './src/index.js',
     output: {
         filename: '[name].[hash:20].js',
-        path: buildPath
+        path: buildPath,
     },
     node: {
-        fs: 'empty'
+        fs: 'empty',
     },
     module: {
-        rules: [
-            {
+        rules: [{
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
@@ -31,8 +30,7 @@ module.exports = {
             },
             {
                 test: /\.(scss|css|sass)$/,
-                use: [
-                    {
+                use: [{
                         loader: MiniCssExtractPlugin.loader
                     },
                     {
@@ -63,15 +61,13 @@ module.exports = {
             {
                 // Load all images as base64 encoding if they are smaller than 8192 bytes
                 test: /\.(png|jpg|gif)$/,
-                use: [
-                    {
-                        loader: 'url-loader',
-                        options: {
-                            name: '[name].[hash:20].[ext]',
-                            limit: 8192
-                        }
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        name: '[name].[hash:20].[ext]',
+                        limit: 8192
                     }
-                ]
+                }]
             }
         ]
     },
@@ -82,33 +78,18 @@ module.exports = {
             inject: 'body',
         }),
         new CleanWebpackPlugin(buildPath),
-        new FaviconsWebpackPlugin({
-            // Your source logo
+        new WebappWebpackPlugin({
+            // For font icon generation
             logo: './src/assets/icon.png',
-            // The prefix for all image files (might be a folder or a name)
-            prefix: 'icons-[hash]/',
-            // Generate a cache file with control hashes and
-            // don't rebuild the favicons until those hashes change
-            persistentCache: true,
-            // Inject the html into the html-webpack-plugin
-            inject: true,
-            // favicon background color (see https://github.com/haydenbleasel/favicons#usage)
-            background: '#fff',
-            // favicon app title (see https://github.com/haydenbleasel/favicons#usage)
-            title: '{{projectName}}',
-
-            // which icons should be generated (see https://github.com/haydenbleasel/favicons#usage)
-            icons: {
-                android: true,
-                appleIcon: true,
-                appleStartup: true,
-                coast: false,
-                favicons: true,
-                firefox: true,
-                opengraph: false,
-                twitter: false,
-                yandex: false,
-                windows: false
+            cache: true,
+            inject: 'force',
+            favicons: {
+                background: '#ddd',
+                theme_color: '#333',
+                icons: {
+                    coast: false,
+                    yandex: false
+                }
             }
         }),
         new MiniCssExtractPlugin({
@@ -125,6 +106,23 @@ module.exports = {
                 }
             },
             canPrint: true
-        })
-    ]
+        }),
+    ],
+    optimization: {
+        minimizer: [new UglifyJsPlugin({
+            uglifyOptions: {
+                warnings: false,
+                parse: {},
+                compress: {
+                    drop_console: true
+                },
+                mangle: true, // Note `mangle.properties` is `false` by default.
+                output: null,
+                toplevel: false,
+                nameCache: null,
+                ie8: false,
+                keep_fnames: false,
+            },
+        })],
+    },
 };

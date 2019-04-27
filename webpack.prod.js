@@ -5,6 +5,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin'); // installed via npm
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
 
 const buildPath = path.resolve(__dirname, 'dist');
 
@@ -25,27 +27,27 @@ module.exports = {
                 loader: 'babel-loader',
 
                 options: {
-                    presets: ['env']
-                }
+                    presets: ['env'],
+                },
             },
             {
                 test: /\.(scss|css|sass)$/,
                 use: [{
-                        loader: MiniCssExtractPlugin.loader
+                        loader: MiniCssExtractPlugin.loader,
                     },
                     {
                         // translates CSS into CommonJS
                         loader: 'css-loader',
                         options: {
-                            sourceMap: true
-                        }
+                            sourceMap: true,
+                        },
                     },
                     {
                         // Runs compiled CSS through postcss for vendor prefixing
                         loader: 'postcss-loader',
                         options: {
-                            sourceMap: true
-                        }
+                            sourceMap: true,
+                        },
                     },
                     {
                         // compiles Sass to CSS
@@ -53,10 +55,10 @@ module.exports = {
                         options: {
                             outputStyle: 'expanded',
                             sourceMap: true,
-                            sourceMapContents: true
-                        }
-                    }
-                ]
+                            sourceMapContents: true,
+                        },
+                    },
+                ],
             },
             {
                 // Load all images as base64 encoding if they are smaller than 8192 bytes
@@ -65,11 +67,11 @@ module.exports = {
                     loader: 'url-loader',
                     options: {
                         name: '[name].[hash:20].[ext]',
-                        limit: 8192
-                    }
-                }]
-            }
-        ]
+                        limit: 8192,
+                    },
+                }],
+            },
+        ],
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -88,12 +90,12 @@ module.exports = {
                 theme_color: '#333',
                 icons: {
                     coast: false,
-                    yandex: false
-                }
-            }
+                    yandex: false,
+                },
+            },
         }),
         new MiniCssExtractPlugin({
-            filename: 'styles.[contenthash].css'
+            filename: 'styles.[contenthash].css',
         }),
         new OptimizeCssAssetsPlugin({
             cssProcessor: require('cssnano'),
@@ -102,11 +104,26 @@ module.exports = {
                     inline: false,
                 },
                 discardComments: {
-                    removeAll: true
-                }
+                    removeAll: true,
+                },
             },
-            canPrint: true
+            canPrint: true,
         }),
+        new CompressionPlugin({
+            filename: '[path].br[query]',
+            algorithm: 'brotliCompress',
+            test: /\.(js|css|html|svg)$/,
+            compressionOptions: {
+                level: 11,
+            },
+            threshold: 10240,
+            minRatio: 0.8,
+            deleteOriginalAssets: false,
+        }),
+        new ImageminPlugin({
+            test: /\.(jpe?g|png|gif)$/i,
+        }),
+
     ],
     optimization: {
         minimizer: [new UglifyJsPlugin({
@@ -114,7 +131,7 @@ module.exports = {
                 warnings: false,
                 parse: {},
                 compress: {
-                    drop_console: true
+                    drop_console: true,
                 },
                 mangle: true, // Note `mangle.properties` is `false` by default.
                 output: null,

@@ -4,3 +4,5 @@ List of modifications made to original cloned repo
 - Replaced favicon-webpack-plugin with webapp-webpack-plugin in production webpack
 - Added UglifyWebpackPlugin to production webpack
 - Added eslint (google style)
+- Added CompressionPlugin to production build process
+- Added ImageminPlugin to production build process

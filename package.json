@@ -10,31 +10,8 @@
         "preview": "npm run build && http-server dist",
         "kickstart": "node kickstarter"
     },
-    "keywords": [
-        "webpack4",
-        "webpack",
-        "starter",
-        "starter-kit",
-        "kit",
-        "webpack",
-        "seed",
-        "webpack-seed",
-        "webpack4-seed",
-        "webpack4-boilerplate",
-        "boilerplate",
-        "javascript",
-        "js",
-        "es6",
-        "es6-starter",
-        "js-starter",
-        "es6-starter-kit"
-    ],
     "author": "Kwabena Manu",
     "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/lifenautjoe/webpack-starter-basic/issues"
-    },
-    "homepage": "https://github.com/lifenautjoe/webpack-starter-basic#readme",
     "dependencies": {
         "lodash": "^4.17.11",
         "normalize.css": "^8.0.0"

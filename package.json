@@ -45,7 +45,7 @@
         "url-loader": "^1.0.1",
         "webapp-webpack-plugin": "^2.7.0",
         "webpack": "^4.20.2",
-        "webpack-cli": "^3.1.1",
+        "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.3.1"
     },
     "kickstartDependencies": [
